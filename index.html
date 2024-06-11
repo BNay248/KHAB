@@ -1,0 +1,64 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create JSON File</title>
+</head>
+<body>
+	<input type="text" placeholder="Username" id="username" required><br>
+	<input type="password" placeholder="Pin" maxlength="4" id="pin" required><br>
+	<input type="button" value="Create User" id="createUser"><br><br>
+	
+    <input type="text" placeholder="Recipe Name" id="recipeName" required><br>
+	<input type="text" placeholder="Ingredients" id="ingredients" required><br>
+	<input type="text" placeholder="Instructions" id="instructions" required><br>
+	<input type="button" value="Save" id="sendData">
+    <script>
+        document.getElementById('sendData').addEventListener('click', function() {
+            const data = {
+                author: document.getElementById("username").value,
+                recipeName: document.getElementById("recipeName").value,
+                ingredients: document.getElementById("ingredients").value,
+				instructions: document.getElementById("instructions").value
+            };
+
+            fetch('create-json.php', { // Changed the endpoint to match the PHP script
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(result => {
+                console.log('Success:', result);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+		
+		document.getElementById('createUser').addEventListener('click', function() {
+            const data = {
+                author: document.getElementById("username").value,
+                recipeName: document.getElementById("pin").value
+            };
+
+            fetch('create-json.php', { // Changed the endpoint to match the PHP script
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(result => {
+                console.log('Success:', result);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    </script>
+</body>
+</html>
