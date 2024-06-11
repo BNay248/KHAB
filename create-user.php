@@ -15,12 +15,12 @@ if(!(is_dir($filepath))){
 	return;
 }
 
-// Write JSON data to file
+//write file
 $file = fopen($filepath . '/cred.json', 'w');
 fwrite($file, json_encode($data, JSON_PRETTY_PRINT));
 fclose($file);
 
-// Return response
+//return
 $response = array(
     'message' => 'User has been created.',
 );
