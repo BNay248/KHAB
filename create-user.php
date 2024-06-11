@@ -1,12 +1,18 @@
 <?php
-// Read JSON data from request
+//read JSON
 $data = json_decode(file_get_contents('php://input'), true);
 
-//Check for and create user directory
+//check for and create user directory
 $username = hash('sha256', $data['username']);
 $filepath = './users/' . $username;
 if(!(is_dir($filepath))){
 	mkdir($filepath, 0666, true);
+} else {
+	$response = array(
+    'message' => 'User already exists.',
+	);
+	echo json_encode($response['message']);
+	return;
 }
 
 // Write JSON data to file
@@ -18,5 +24,5 @@ fclose($file);
 $response = array(
     'message' => 'User has been created.',
 );
-echo json_encode($response);
+echo json_encode($response['message']);
 ?>

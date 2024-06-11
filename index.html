@@ -5,60 +5,83 @@
     <title>Create JSON File</title>
 </head>
 <body>
-	<input type="text" placeholder="Username" id="username" required><br>
-	<input type="password" placeholder="Pin" maxlength="4" id="pin" required><br>
-	<input type="button" value="Create User" id="createUser"><br><br>
+	<input type='text' placeholder='Username' id='username' required><br>
+	<input type='password' placeholder='Pin' maxlength='4' id='pin' required><br>
+	<input type='button' value='Create User' onclick='createUser()'><br><br>
+	<input type='button' value='Login' onclick='login()'><br>
 	
-    <input type="text" placeholder="Recipe Name" id="recipeName" required><br>
-	<input type="text" placeholder="Ingredients" id="ingredients" required><br>
-	<input type="text" placeholder="Instructions" id="instructions" required><br>
-	<input type="button" value="Save" id="sendData">
+    <input type='text' placeholder='Recipe Name' id='recipeName' required><br>
+	<input type='text' placeholder='Ingredients' id='ingredients' required><br>
+	<input type='text' placeholder='Instructions' id='instructions' required><br>
+	<input type='button' value='Save' onclick='sendData()'>
     <script>
-        document.getElementById('sendData').addEventListener('click', function() {
+	
+        function sendData() {
             const data = {
-                author: document.getElementById("username").value,
+                username: document.getElementById("username").value,
                 recipeName: document.getElementById("recipeName").value,
                 ingredients: document.getElementById("ingredients").value,
 				instructions: document.getElementById("instructions").value
             };
 
-            fetch('create-json.php', { // Changed the endpoint to match the PHP script
-                method: 'POST',
+            fetch("create-json.php", {
+                method: "POST",
                 headers: {
-                    'Content-Type': 'application/json'
+                    "Content-Type": "application/json"
                 },
                 body: JSON.stringify(data)
             })
             .then(response => response.json())
             .then(result => {
-                console.log('Success:', result);
+                window.alert("Success:" + result);
             })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-        });
+        };
 		
-		document.getElementById('createUser').addEventListener('click', function() {
+		function login() {
             const data = {
-                author: document.getElementById("username").value,
-                recipeName: document.getElementById("pin").value
+                username: document.getElementById("username").value,
+                pin: document.getElementById("pin").value
             };
 
-            fetch('create-json.php', { // Changed the endpoint to match the PHP script
-                method: 'POST',
+            fetch("create-json.php", {
+                method: "POST",
                 headers: {
-                    'Content-Type': 'application/json'
+                    "Content-Type": "application/json"
                 },
                 body: JSON.stringify(data)
             })
             .then(response => response.json())
             .then(result => {
-                console.log('Success:', result);
+				if(result === 'good'){
+					window.alert("Success:" + result);
+				}
+				if(result === 'pin'){
+					window.alert('Incorrect Pin');
+				}
+				if(result === 'user'){
+					window.alert('Could not find User');
+				}
+			})
+        };
+		
+		function createUser() {
+            const data = {
+                username: document.getElementById("username").value,
+                pin: document.getElementById("pin").value
+            };
+
+            fetch("create-user.php", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(data)
             })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-        });
+            .then(response => response.json())
+            .then(result => {
+                window.alert("Success: " + result);
+            })
+        };
     </script>
 </body>
 </html>
