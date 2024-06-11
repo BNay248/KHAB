@@ -10,7 +10,7 @@
             width: 50%;
             padding: 20px;
         }
-        #recipeForm {
+        #recipeForm, #rightPane {
             display: none;
         }
         #jsonOutput {
@@ -132,6 +132,7 @@
                     window.alert('Could not find User');
                 } else {
                     document.getElementById('recipeForm').style.display = 'block';
+					document.getElementById('rightPane').style.display = 'block';
 					document.getElementById('loginForm').style.display = 'none';
                 }
             });
@@ -155,6 +156,30 @@
                 window.alert("Success: " + result);
             });
         }
+		
+		function share() {
+            const data = {
+                username: document.getElementById("username").value,
+				title: document.getElementById("title").value,
+                newusername: document.getElementById("share").value
+            };
+
+            fetch("share.php", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(result => {
+				if(result === 'user'){
+					window.alert('No user exists with that username');
+					return;
+				}
+                window.alert(result);
+            });
+        }
 
         function pullRecipe() {
 			const data = {
@@ -173,6 +198,14 @@
                 document.getElementById('jsonOutput').textContent = JSON.stringify(data, null, 2);
             })
         }
+		
+		function logOut() {
+			document.getElementById('recipeForm').style.display = 'none';
+			document.getElementById('rightPane').style.display = 'none';
+			document.getElementById('loginForm').style.display = 'block';
+			document.getElementById('username').value = null;
+			document.getElementById('pin').value = null;
+		}
     </script>
 </head>
 <body>
@@ -202,14 +235,18 @@
 
             <input type='text' placeholder='img url' id='imgUrl' required><br>
 
-            <input type='button' value='Save' onclick='sendData()'>
+            <input type='button' value='Save' onclick='sendData()'><br><br>
+			<input type='button' value='Logout' onclick='logOut()'>
         </div>
     </div>
 
     <div id="rightPane">
         <h2>JSON Output</h2>
 		<input type='text' placeholder='Recipe Name' id='title'>
+		<input type='text' placeholder='Share To' id='share'><br>
 		<input type='button' value='Pull Recipe' onclick='pullRecipe()'>
+		<input type='button' value='Share Recipe' onclick='share()'>
+		
         <div id="jsonOutput"></div>
     </div>
 </body>
