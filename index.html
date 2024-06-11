@@ -2,6 +2,24 @@
 <html>
 <head>
     <title>Create JSON File</title>
+    <style>
+        body {
+            display: flex;
+        }
+        #leftPane, #rightPane {
+            width: 50%;
+            padding: 20px;
+        }
+        #recipeForm {
+            display: none;
+        }
+        #jsonOutput {
+            white-space: pre-wrap;
+            background-color: #f0f0f0;
+            padding: 10px;
+            border: 1px solid #ccc;
+        }
+    </style>
     <script>
         function addInstructionField() {
             const instructionsContainer = document.getElementById('instructionsContainer');
@@ -110,9 +128,11 @@
             .then(result => {
                 if (result === 'pin') {
                     window.alert('Incorrect Pin');
-                }
-                if (result === 'user') {
+                } else if (result === 'user') {
                     window.alert('Could not find User');
+                } else {
+                    document.getElementById('recipeForm').style.display = 'block';
+					document.getElementById('loginForm').style.display = 'none';
                 }
             });
         }
@@ -135,31 +155,62 @@
                 window.alert("Success: " + result);
             });
         }
+
+        function pullRecipe() {
+			const data = {
+                username: document.getElementById("username").value,
+                title: document.getElementById("title").value
+            };
+            fetch("pullRecipe.php", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('jsonOutput').textContent = JSON.stringify(data, null, 2);
+            })
+        }
     </script>
 </head>
 <body>
-    <input type='text' placeholder='Username' id='username' required><br>
-    <input type='password' placeholder='Pin' maxlength='4' id='pin' required><br>
-    <input type='button' value='Create User' onclick='createUser()'><br>
-    <input type='button' value='Login' onclick='login()'><br><br>
+    <div id="leftPane">
+		<div id="loginForm">
+        <input type='text' placeholder='Username' id='username' required><br>
+        <input type='password' placeholder='Pin' maxlength='4' id='pin' required><br>
+        <input type='button' value='Create User' onclick='createUser()'><br>
+        <input type='button' value='Login' onclick='login()'><br><br>
+		</div>
 
-    <input type='text' placeholder='Recipe Name' id='recipeName' required><br>
-    <div id="instructionsContainer">
-        <input type='text' placeholder='Instruction' id='instruction1' required><br>
-    </div>
-    <input type='button' value='Add Instruction' onclick='addInstructionField()'><br>
+        <div id="recipeForm">
+            <input type='text' placeholder='Recipe Name' id='recipeName' required><br>
+            <div id="instructionsContainer">
+                <input type='text' placeholder='Instruction' id='instruction1' required><br>
+            </div>
+            <input type='button' value='Add Instruction' onclick='addInstructionField()'><br>
 
-    <div id="ingredientsContainer">
-        <div class="ingredient">
-            <input type='text' placeholder='Ingredient Name' id='ingredient1Name' required><br>
-            <input type='text' placeholder='Ingredient Quant' id='ingredient1Quant' required><br>
-            <input type='text' placeholder='Ingredient Unit' id='ingredient1Unit' required><br><br>
+            <div id="ingredientsContainer">
+                <div class="ingredient">
+                    <input type='text' placeholder='Ingredient Name' id='ingredient1Name' required><br>
+                    <input type='text' placeholder='Ingredient Quant' id='ingredient1Quant' required><br>
+                    <input type='text' placeholder='Ingredient Unit' id='ingredient1Unit' required><br><br>
+                </div>
+            </div>
+            <input type='button' value='Add Ingredient' onclick='addIngredientField()'><br>
+
+            <input type='text' placeholder='img url' id='imgUrl' required><br>
+
+            <input type='button' value='Save' onclick='sendData()'>
         </div>
     </div>
-    <input type='button' value='Add Ingredient' onclick='addIngredientField()'><br>
 
-    <input type='text' placeholder='img url' id='imgUrl' required><br>
-
-    <input type='button' value='Save' onclick='sendData()'>
+    <div id="rightPane">
+        <h2>JSON Output</h2>
+		<input type='text' placeholder='Recipe Name' id='title'>
+		<input type='button' value='Pull Recipe' onclick='pullRecipe()'>
+        <div id="jsonOutput"></div>
+    </div>
 </body>
 </html>
