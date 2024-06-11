@@ -4,7 +4,7 @@ $data = json_decode(file_get_contents('php://input'), true);
 
 //generate filename
 $username = hash('sha256', $data['username']);
-$fileName = "./Users/" . $username . "/" . $data['title'] . ".json";
+$fileName = "./users/" . $username . "/" . $data['title'] . ".json";
 
 //create json file
 $file = fopen($fileName, 'w');
