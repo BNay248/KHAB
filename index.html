@@ -110,6 +110,23 @@
                 window.alert("Success: " + result);
             });
         }
+		
+		async function search(){
+			const data = {
+				directory: document.getElementById("username").value,
+				keyword: document.getElementById("keyword").value
+			};
+			
+			const response = await fetch("search.php", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json"
+				},
+				body: JSON.stringify(data)
+			})
+			const result = await response.json();
+			document.getElementById('jsonOutput').textContent = JSON.stringify(result, null, 2);
+		}
 
         function login() {
             const data = {
@@ -200,11 +217,7 @@
         }
 		
 		function logOut() {
-			document.getElementById('recipeForm').style.display = 'none';
-			document.getElementById('rightPane').style.display = 'none';
-			document.getElementById('loginForm').style.display = 'block';
-			document.getElementById('username').value = null;
-			document.getElementById('pin').value = null;
+			location.reload();
 		}
     </script>
 </head>
@@ -246,8 +259,9 @@
 		<input type='text' placeholder='Share To' id='share'><br>
 		<input type='button' value='Pull Recipe' onclick='pullRecipe()'>
 		<input type='button' value='Share Recipe' onclick='share()'>
-		
         <div id="jsonOutput"></div>
+		<input type='text' placeholder='keyword' id='keyword'>
+		<input type='button' value='Search' onclick='search()'>
     </div>
 </body>
 </html>
