@@ -1,5 +1,5 @@
 <?php
-//eead JSON
+//read JSON
 $data = json_decode(file_get_contents('php://input'), true);
 
 //check for user creds

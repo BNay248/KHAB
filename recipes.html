@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script src="index.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>PHP SERVER</title>
+    <link rel="stylesheet" href="./style.css">
+    <link rel="icon" href="./favicon.ico" type="image/x-icon">
+  </head>
+  <body>
+     <div class="header">
+   <ul class="navbar">
+  <li><a href="index.html">Home</a></li>
+  <li><a href="recipes.php">My Recipes</a></li>
+  <li><a href="findFood.php">Browse</a></li>
+  <li><a href="./users">My Profile</a></li>
+</ul>
+</div>
+    
+    <div id="leftPane">
+      <div id="loginForm">
+          <input type='text' placeholder='Username' id='username' required><br>
+          <input type='password' placeholder='Pin' maxlength='4' id='pin' required><br>
+          <input type='button' value='Create User' onclick='createUser()'><br>
+          <input type='button' value='Login' onclick='login()'><br><br>
+      </div>
+     <div class="header">
+        <h2>JSON Output</h2>
+		<input type='text' placeholder='Recipe Name' id='title'>
+		<input type='text' placeholder='Share To' id='share'><br>
+		<input type='button' value='Pull Recipe' onclick='pullRecipe()'>
+		<input type='button' value='Share Recipe' onclick='share()'>
+        <div id="jsonOutput"></div>
+		<input type='text' placeholder='keyword' id='keyword'>
+		<input type='button' value='Search' onclick='search()'>
+    </div>
+	<script src="index.js"></script>
+  </body>
+</html>
