@@ -1,0 +1,47 @@
+
+ body {
+            display: flex;
+        }
+        #leftPane, #rightPane {
+            width: 50%;
+            margin-top: 50px;
+            padding: 20px;
+        }
+        #recipeForm, #rightPane {
+            display: none;
+        }
+        #jsonOutput {
+            white-space: pre-wrap;
+            background-color: #f0f0f0;
+            padding: 10px;
+            border: 1px solid #ccc;
+        }
+.navbar {
+    list-style-type: none;  /* Remove bullet points */
+    background-color: #333; /* Background color */
+    overflow: hidden;       /* Clear floats and create a new block formatting context */
+    position: absolute;
+    height: 5%;
+    width: 110%;
+    float: left;
+   }
+
+/* Style the navbar links */
+.navbar li {
+    float: left;  
+    display: inline;          
+}
+
+.navbar li a {
+    display: block;
+    color: white;           /* Text color */
+    text-align: center;     /* Center-align text */
+    padding: 14px 20px;     /* Padding inside each link */
+    text-decoration: none;  /* Remove underline from links */
+}
+
+/* Change background color on hover */
+.navbar li a:hover {
+    background-color: #ddd;
+    color: black;
+}
