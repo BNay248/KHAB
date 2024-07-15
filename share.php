@@ -9,7 +9,7 @@ $title = $data['title'];
 
 //get file contents
 $jsonFile = ('./users/' . $username . '/' . $title . '.json');
-if (file_exists($jsonFile)) {
+if (file_exists($jsonFile) && $title != 'cred') {
 	if(!(is_dir('./users/' . $newusername))){
 	$response = array(
     'message' => 'user',

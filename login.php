@@ -14,7 +14,7 @@ if(!(is_dir('./users/' . $username))){
 //check for pin validity
 $jsonFile = file_get_contents('./users/' . $username . '/cred.json');
 $array = json_decode($jsonFile, true);
-if($array['pin'] != $data['pin']){
+if(hash('sha256', $data['pin']) != $array['pin']){
 	$response = array(
     'message' => 'pin',
 	);

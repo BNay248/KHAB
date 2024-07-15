@@ -4,6 +4,12 @@ $data = json_decode(file_get_contents('php://input'), true);
 
 //generate filename
 $username = hash('sha256', $data['username']);
+if($data['title'] == 'cred'){
+	$response = array(
+	'message' => 'Cannot create recipe titled cred.',
+	);
+}
+echo json_encode($response['message']);
 $fileName = "./Users/" . $username . "/" . $data['title'] . ".json";
 
 //create json file

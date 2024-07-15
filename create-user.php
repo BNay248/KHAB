@@ -4,6 +4,7 @@ $data = json_decode(file_get_contents('php://input'), true);
 
 //check for and create user directory
 $username = hash('sha256', $data['username']);
+$data['pin'] = hash('sha256', $data['pin']);
 $filepath = './users/' . $username;
 if(!(is_dir($filepath))){
 	mkdir($filepath, 0666, true);
