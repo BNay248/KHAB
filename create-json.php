@@ -10,7 +10,7 @@ if($data['title'] == 'cred'){
 	);
 }
 echo json_encode($response['message']);
-$fileName = "./Users/" . $username . "/" . $data['title'] . ".json";
+$fileName = "./users/" . $username . "/" . $data['title'] . ".json";
 
 //create json file
 $file = fopen($fileName, 'w');

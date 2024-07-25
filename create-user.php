@@ -7,7 +7,7 @@ $username = hash('sha256', $data['username']);
 $data['pin'] = hash('sha256', $data['pin']);
 $filepath = './users/' . $username;
 if(!(is_dir($filepath))){
-	mkdir($filepath, 0666, true);
+	mkdir($filepath, 0777, true);
 } else {
 	$response = array(
     'message' => 'User already exists.',

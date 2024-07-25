@@ -17,7 +17,7 @@ if (file_exists($jsonFile) && $title != 'cred') {
 	echo json_encode($response['message']);
 	return;
 	}
-    $pasteName = "./Users/" . $newusername . "/" . $data['title'] . ".json";
+    $pasteName = "./users/" . $newusername . "/" . $data['title'] . ".json";
 	
 	//create json file
 	copy($jsonFile, $pasteName);
