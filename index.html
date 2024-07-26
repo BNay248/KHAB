@@ -107,7 +107,7 @@
             })
             .then(response => response.json())
             .then(result => {
-                window.alert("Success: " + result);
+                window.alert(result['message']);
             });
         }
 
@@ -126,14 +126,12 @@
             })
             .then(response => response.json())
             .then(result => {
-                if (result === 'pin') {
-                    window.alert('Incorrect Pin');
-                } else if (result === 'user') {
-                    window.alert('Could not find User');
+                if (result['message'] === 'user') {
+                    window.alert('Could not find user, or incorrect pin.');
                 } else {
                     document.getElementById('recipeForm').style.display = 'block';
-					document.getElementById('rightPane').style.display = 'block';
-					document.getElementById('loginForm').style.display = 'none';
+    		    document.getElementById('rightPane').style.display = 'block';
+		    document.getElementById('loginForm').style.display = 'none';
                 }
             });
         }
@@ -153,14 +151,14 @@
             })
             .then(response => response.json())
             .then(result => {
-                window.alert("Success: " + result);
+                window.alert(result);
             });
         }
 		
-		function share() {
+	function share() {
             const data = {
                 username: document.getElementById("username").value,
-				title: document.getElementById("title").value,
+		title: document.getElementById("title").value,
                 newusername: document.getElementById("share").value
             };
 
@@ -173,16 +171,16 @@
             })
             .then(response => response.json())
             .then(result => {
-				if(result === 'user'){
-					window.alert('No user exists with that username');
-					return;
-				}
-                window.alert(result);
+	    if(result === 'user'){
+		window.alert('No user exists with that username');
+		return;
+		}
+                window.alert(result['message']);
             });
         }
 
         function pullRecipe() {
-			const data = {
+	    const data = {
                 username: document.getElementById("username").value,
                 title: document.getElementById("title").value
             };
@@ -199,13 +197,9 @@
             })
         }
 		
-		function logOut() {
-			document.getElementById('recipeForm').style.display = 'none';
-			document.getElementById('rightPane').style.display = 'none';
-			document.getElementById('loginForm').style.display = 'block';
-			document.getElementById('username').value = null;
-			document.getElementById('pin').value = null;
-		}
+	function logOut() {
+            location.reload();
+	}
 		
     </script>
 </head>

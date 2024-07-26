@@ -1,37 +1,29 @@
 <?php
+require 'vendor/autoload.php';
 //read JSON
 $data = json_decode(file_get_contents('php://input'), true);
 
 //get username
-$username = hash('sha256', $data['username']);
-$newusername = hash('sha256', $data['newusername']);
-$title = $data['title'];
-
-//get file contents
-$jsonFile = ('./users/' . $username . '/' . $title . '.json');
-if (file_exists($jsonFile) && $title != 'cred') {
-	if(!(is_dir('./users/' . $newusername))){
-	$response = array(
-    'message' => 'user',
-	);
-	echo json_encode($response['message']);
-	return;
-	}
-    $pasteName = "./users/" . $newusername . "/" . $data['title'] . ".json";
-	
-	//create json file
-	copy($jsonFile, $pasteName);
-	$response = array(
-    'message' => 'Recipe Copied',
-	);
-	echo json_encode($response['message']);
-	return;
+$user = hash('sha256', $data['username']);
+$newuser = hash('sha256', $data['newusername']);
+$client = new MongoDB\Client("mongodb://mongodb:27017");
+$database = $client->selectDatabase('khab');
+$collection = $database->selectCollection($user);
+$newusercoll = $database->selectCollection($newuser);
+$checkuser = $newusercoll->findOne(['username' => $newuser]);
+if(!$checkuser){
+    echo json_encode(['message' => 'User not found.']);
+    exit;
+}
+$recipe = $collection->findOne(['title' => $data['title']]);
+if($recipe){
+    try{
+	$newusercoll->insertOne($collection->findOne(['title' => $data['title']]));
+	echo json_encode(['message' => 'Recipe succesfully shared.']);
+    } catch (Exception $e) {
+	echo json_encode(['message' => 'User already has that recipe.']);
+    }
 } else {
-    //return error
-    $response = array(
-    'message' => 'Recipe was not Found',
-	);
-	echo json_encode($response['message']);
-	return;
+    echo json_encode(['message' => 'Recipe not found.']);
 }
 ?>

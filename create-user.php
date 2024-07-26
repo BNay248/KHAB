@@ -1,25 +1,30 @@
 <?php
 //read JSON
+require 'vendor/autoload.php';
+
 $data = json_decode(file_get_contents('php://input'), true);
 
 //check for and create user directory
-$username = hash('sha256', $data['username']);
+$data['username'] = hash('sha256', $data['username']);
+$user = $data['username'];
 $data['pin'] = hash('sha256', $data['pin']);
-$filepath = './users/' . $username;
-if(!(is_dir($filepath))){
-	mkdir($filepath, 0777, true);
-} else {
-	$response = array(
-    'message' => 'User already exists.',
-	);
-	echo json_encode($response['message']);
-	return;
+
+$client = new MongoDB\Client("mongodb://mongodb:27017");
+$database = $client->selectDatabase('khab');
+$collection = $database->selectCollection($user);
+
+$collections = $database->listCollections();
+foreach ($collections as $coll) {
+        if ($coll->getName() === $user) {
+                $response = array(
+                'message' => 'User already exists.',
+                );
+                echo json_encode($response['message']);
+                exit;
+        }
 }
 
-//write file
-$file = fopen($filepath . '/cred.json', 'w');
-fwrite($file, json_encode($data, JSON_PRETTY_PRINT));
-fclose($file);
+$result = $collection->insertOne($data);
 
 //return
 $response = array(
@@ -27,3 +32,4 @@ $response = array(
 );
 echo json_encode($response['message']);
 ?>
+

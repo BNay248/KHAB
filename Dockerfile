@@ -1,17 +1,18 @@
-FROM php:7.2-apache
-COPY . /var/www/html
+FROM php:7.4-apache
+COPY create-json.php /var/www/html
+COPY create-user.php /var/www/html
+COPY index.html /var/www/html
+COPY login.php /var/www/html
+COPY pullRecipe.php /var/www/html
+COPY share.php /var/www/html
 WORKDIR /var/www/html
-RUN chown www-data:www-data ./users
-RUN apt-get update
-RUN apt-get upgrade -y
-RUN apt-get update
-RUN dpkg --get-selections gnupg
-RUN apt-get install -y gnupg
-RUN apt-get update
-RUN apt-get install -y wget
-RUN apt-get update
-RUN wget -qO - https://www.mongodb.org/static/pgp/server-6.0.asc | apt-key add -
-RUN echo "deb http://repo.mongodb.org/apt/debian buster/mongodb-org/6.0 main" | tee /etc/apt/sources.list.d/mongodb-org-6.0.list
-RUN apt-get update
-RUN apt-get install -y mongodb-org
+RUN apt-get update && \
+    apt-get install -y libcurl4-openssl-dev pkg-config libssl-dev && \
+    pecl install mongodb && \
+    docker-php-ext-enable mongodb && \
+    apt-get install -y git && \
+    curl -sS https://getcomposer.org/installer | php && \
+    mv composer.phar /usr/local/bin/composer && \   
+    composer init --name="khab/khab" --description="desc" --require="mongodb/mongodb:^1.0" --no-interaction && \
+    composer install
 EXPOSE 80

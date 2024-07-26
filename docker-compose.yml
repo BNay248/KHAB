@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  khab:
+    image: khab
+    ports:
+      - "80:80" # Adjust the port mapping if needed
+    depends_on:
+      - mongodb
+    environment:
+      MONGO_URI: mongodb://mongodb:27017/khab
+    networks:
+      - khab
+
+  mongodb:
+    image: mongodb
+    ports:
+      - "27017:27017" # Adjust the port mapping if needed
+    networks:
+      - khab
+
+networks:
+  khab:
+    driver: bridge
