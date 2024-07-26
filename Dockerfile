@@ -4,6 +4,7 @@ COPY create-user.php /var/www/html
 COPY index.html /var/www/html
 COPY login.php /var/www/html
 COPY pullRecipe.php /var/www/html
+COPY search.php /var/www/html
 COPY share.php /var/www/html
 WORKDIR /var/www/html
 RUN apt-get update && \

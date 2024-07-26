@@ -193,8 +193,82 @@
             })
             .then(response => response.json())
             .then(data => {
-                document.getElementById('jsonOutput').textContent = JSON.stringify(data, null, 2);
+                document.getElementById('jsonOutput').innerHTML = formatRecipe(data);
             })
+        }
+
+        function search() {
+	    const data = {
+                username: document.getElementById("username").value,
+                ingredient: document.getElementById("searchIng").value
+            };
+            fetch("search.php", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if(data.error) {
+                    document.getElementById('jsonOutput').innerHTML = `<p>${data.error}</p>`;
+                 } else { 
+                    document.getElementById('jsonOutput').innerHTML = formatSearchResult(data);
+                }
+            })
+        }
+
+        function formatSearchResult(data) {
+            // Extract relevant fields from the input data
+            const recipes = data || ['none found'];
+            
+            // Format recipes
+            const formattedRecipes = recipes.map(recipe => {
+        return `<li>${recipe['title']} by ${recipe['username']}</li>`;
+            }).join('');
+            
+            // Create HTML content
+            const htmlContent = `
+                <h3>Recipes:</h3>
+                <ul>${formattedRecipes}</ul>
+            `;
+            
+            return htmlContent;
+        }
+		
+	function logOut() {
+            location.reload();
+	}
+        
+        function formatRecipe(data) {
+            // Extract relevant fields from the input data
+            const title = data['title'] || 'no title found';
+            const username = data['username'] || 'no author found';
+            const ingredients = data['ingredients'] || ['no ingredients found'];
+            const instructions = data['instructions'] || ['no instructions found'];
+            
+            // Format ingredients
+            const formattedIngredients = ingredients.map(ingredient => {
+                return `<li>${ingredient.name}: ${ingredient.quantity} ${ingredient.unit}</li>`;
+            }).join('');
+            
+            // Format instructions
+            const formattedInstructions = instructions.map(instruction => {
+                return `<li>${instruction}</li>`;
+            }).join('');
+            
+            // Create HTML content
+            const htmlContent = `
+                <h1>${title}</h1>
+                <p>by ${username}</p>
+                <h3>Ingredients:</h3>
+                <ul>${formattedIngredients}</ul>
+                <h3>Instructions:</h3>
+                <ul>${formattedInstructions}</ul>
+            `;
+            
+            return htmlContent;
         }
 		
 	function logOut() {
@@ -238,9 +312,11 @@
     <div id="rightPane">
         <h2>JSON Output</h2>
 		<input type='text' placeholder='Recipe Name' id='title'>
+                <input type='text' placeholder='Ingredient Name' id='searchIng'>
 		<input type='text' placeholder='Share To' id='share'><br>
 		<input type='button' value='Pull Recipe' onclick='pullRecipe()'>
 		<input type='button' value='Share Recipe' onclick='share()'>
+                <input type='button' value='List Recipes' onclick='search()'>
 		
         <div id="jsonOutput"></div>
     </div>
