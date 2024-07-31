@@ -1,23 +1,29 @@
 <?php
-//read JSON
-require 'vendor/autoload.php';
-
+//eead JSON
 $data = json_decode(file_get_contents('php://input'), true);
 
-//check for and create user directory
-$data['username'] = hash('sha256', $data['username']);
-$user = $data['username'];
-$data['pin'] = hash('sha256', $data['pin']);
-$pin = $data['pin'];
-$client = new MongoDB\Client("mongodb://mongodb:27017");
-$database = $client->selectDatabase('khab');
-$collection = $database->selectCollection($user);
-
 //check for user creds
-$result = $collection->findOne(['username' => $user, 'pin' => $pin]);
-if(!$result){
-    echo json_encode(array('message' => 'user'));
-    return;
+$username = hash('sha256', $data['username']);
+if(!(is_dir('./users/' . $username))){
+	$response = array(
+    'message' => 'user',
+	);
+	echo json_encode($response['message']);
+	return;
 }
-echo json_encode(array('message' => 'good'));
+//check for pin validity
+$jsonFile = file_get_contents('./users/' . $username . '/cred.json');
+$array = json_decode($jsonFile, true);
+if(hash('sha256', $data['pin']) != $array['pin']){
+	$response = array(
+    'message' => 'pin',
+	);
+	echo json_encode($response['message']);
+	return;
+}
+//good response
+$response = array(
+'message' => 'good',
+);
+echo json_encode($response['message']);
 ?>

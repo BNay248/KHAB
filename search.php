@@ -1,27 +1,21 @@
 <?php
-// Include MongoDB PHP library
-require 'vendor/autoload.php';
+header('Content-Type: application/json');
 
-$data = json_decode(file_get_contents('php://input'), true);
+// Handle form submission
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    if (isset($_POST['search_food']) && !empty($_POST['search_food'])) {
+        $search_food = $_POST['search_food'];
+        $api_url = "https://www.themealdb.com/api/json/v1/1/search.php?s={$search_food}";
+        $meal_data = file_get_contents($api_url);
+        $meals = json_decode($meal_data, true);
 
-// Check for and create user directory
-$user = hash('sha256', $data['username']);
-$client = new MongoDB\Client("mongodb://mongodb:27017");
-$database = $client->selectDatabase('khab');
-$collection = $database->selectCollection($user);
-
-// Check for user creds
-$result = $collection->find(['ingredients.name' => $data['ingredient']]);
-$result = iterator_to_array($result);
-
-
-if ($result) {
-    // Return recipes as JSON
-    echo json_encode($result, JSON_PRETTY_PRINT);
-} else {
-    // Return error if no recipes found
-    header('Content-Type: application/json', true, 404);
-    echo json_encode(['error' => 'No recipes with specified ingredient found.']);
+        if ($meals && isset($meals['meals'])) {
+            echo json_encode($meals);
+        } else {
+            echo json_encode(['meals' => []]);
+        }
+    } else {
+        echo json_encode(['meals' => []]);
+    }
 }
 ?>
-

@@ -1,0 +1,283 @@
+<!DOCTYPE HTML>
+<!--
+	Massively by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>Elements Reference - Massively by HTML5 UP</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+	</head>
+	<body class="is-preload">
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Header -->
+					<header id="header">
+						<a href="generic.html" class="logo">Search</a>
+					</header>
+
+				<!-- Nav -->
+					<nav id="nav">
+						<ul class="links">
+							<li><a href="index.html">Popular</a></li>
+							<li><a href="generic.html">Search</a></li>
+							<li class="active"><a href="elements.html">Home</a></li>
+						</ul>
+						<ul class="icons">
+							<li><a href="#" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li>
+							<li><a href="#" class="icon brands fa-facebook-f"><span class="label">Facebook</span></a></li>
+							<li><a href="#" class="icon brands fa-instagram"><span class="label">Instagram</span></a></li>
+							<li><a href="#" class="icon brands fa-github"><span class="label">GitHub</span></a></li>
+						</ul>
+					</nav>
+
+				<!-- Main -->
+					<div id="main">
+
+<script>
+        function addInstructionField() {
+            const instructionsContainer = document.getElementById('instructionsContainer');
+            const inputFields = instructionsContainer.querySelectorAll('input[type="text"]');
+            const instructionCount = inputFields.length;
+            const newInstruction = document.createElement('input');
+            newInstruction.type = 'text';
+            newInstruction.placeholder = 'Instruction';
+            newInstruction.id = 'instruction' + (instructionCount + 1);
+            newInstruction.required = true;
+            instructionsContainer.appendChild(newInstruction);
+            instructionsContainer.appendChild(document.createElement('br'));
+        }
+
+        function addIngredientField() {
+            const ingredientsContainer = document.getElementById('ingredientsContainer');
+            const ingredientCount = ingredientsContainer.querySelectorAll('.ingredient').length;
+            
+            const nameField = document.createElement('input');
+            nameField.type = 'text';
+            nameField.placeholder = 'Ingredient Name';
+            nameField.id = 'ingredient' + (ingredientCount + 1) + 'Name';
+            nameField.required = true;
+
+            const quantField = document.createElement('input');
+            quantField.type = 'text';
+            quantField.placeholder = 'Ingredient Quant';
+            quantField.id = 'ingredient' + (ingredientCount + 1) + 'Quant';
+            quantField.required = true;
+
+            const unitField = document.createElement('input');
+            unitField.type = 'text';
+            unitField.placeholder = 'Ingredient Unit';
+            unitField.id = 'ingredient' + (ingredientCount + 1) + 'Unit';
+            unitField.required = true;
+
+            const ingredientDiv = document.createElement('div');
+            ingredientDiv.classList.add('ingredient');
+            ingredientDiv.appendChild(nameField);
+            ingredientDiv.appendChild(document.createElement('br'));
+            ingredientDiv.appendChild(quantField);
+            ingredientDiv.appendChild(document.createElement('br'));
+            ingredientDiv.appendChild(unitField);
+            ingredientDiv.appendChild(document.createElement('br'));
+            ingredientDiv.appendChild(document.createElement('br'));
+
+            ingredientsContainer.appendChild(ingredientDiv);
+        }
+
+        function sendData() {
+            const instructions = [];
+            const instructionsContainer = document.getElementById('instructionsContainer');
+            const instructionFields = instructionsContainer.querySelectorAll('input[type="text"]');
+            instructionFields.forEach(input => instructions.push(input.value));
+
+            const ingredients = [];
+            const ingredientsContainer = document.getElementById('ingredientsContainer');
+            const ingredientDivs = ingredientsContainer.querySelectorAll('.ingredient');
+            ingredientDivs.forEach(ingredientDiv => {
+                const name = ingredientDiv.querySelector('input[id*="Name"]').value;
+                const quantity = ingredientDiv.querySelector('input[id*="Quant"]').value;
+                const unit = ingredientDiv.querySelector('input[id*="Unit"]').value;
+                ingredients.push({ name, quantity, unit });
+            });
+
+            const data = {
+                "username": document.getElementById("username").value,
+                "title": document.getElementById("recipeName").value,
+                "image_url": document.getElementById("imgUrl").value,
+                "linktype": "recipe",
+                "instructions": instructions,
+                "ingredients": ingredients,
+                "landing_page_configuration": {
+                    "partner_lineback_url": "string",
+                    "enable_pantry_items": "true"
+                }
+            };
+
+            fetch("create-json.php", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(result => {
+                window.alert("Success: " + result);
+            });
+        }
+
+        function login() {
+            const data = {
+                username: document.getElementById("username").value,
+                pin: document.getElementById("pin").value
+            };
+
+            fetch("login.php", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(result => {
+                if (result === 'pin') {
+                    window.alert('Incorrect Pin');
+                } else if (result === 'user') {
+                    window.alert('Could not find User');
+                } else {
+                    document.getElementById('recipeForm').style.display = 'block';
+					document.getElementById('rightPane').style.display = 'block';
+					document.getElementById('loginForm').style.display = 'none';
+                }
+            });
+        }
+
+        function createUser() {
+            const data = {
+                username: document.getElementById("username").value,
+                pin: document.getElementById("pin").value
+            };
+
+            fetch("create-user.php", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(result => {
+                window.alert("Success: " + result);
+            });
+        }
+		
+		function share() {
+            const data = {
+                username: document.getElementById("username").value,
+				title: document.getElementById("title").value,
+                newusername: document.getElementById("share").value
+            };
+
+            fetch("share.php", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(result => {
+				if(result === 'user'){
+					window.alert('No user exists with that username');
+					return;
+				}
+                window.alert(result);
+            });
+        }
+
+        function pullRecipe() {
+			const data = {
+                username: document.getElementById("username").value,
+                title: document.getElementById("title").value
+            };
+            fetch("pullRecipe.php", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('jsonOutput').textContent = JSON.stringify(data, null, 2);
+            })
+        }
+		
+		function logOut() {
+			document.getElementById('recipeForm').style.display = 'none';
+			document.getElementById('rightPane').style.display = 'none';
+			document.getElementById('loginForm').style.display = 'block';
+			document.getElementById('username').value = null;
+			document.getElementById('pin').value = null;
+		}
+		
+    </script>
+</head>
+<body>
+    <div id="leftPane">
+		<div id="loginForm">
+        <input type='text' placeholder='Username' id='username' required><br>
+        <input type='password' placeholder='Pin' maxlength='4' id='pin' required><br>
+        <input type='button' value='Create User' onclick='createUser()'><br>
+        <input type='button' value='Login' onclick='login()'><br><br>
+		</div>
+
+        <div id="recipeForm">
+            <input type='text' placeholder='Recipe Name' id='recipeName' required><br>
+            <div id="instructionsContainer">
+                <input type='text' placeholder='Instruction' id='instruction1' required><br>
+            </div>
+            <input type='button' value='Add Instruction' onclick='addInstructionField()'><br>
+
+            <div id="ingredientsContainer">
+                <div class="ingredient">
+                    <input type='text' placeholder='Ingredient Name' id='ingredient1Name' required><br>
+                    <input type='text' placeholder='Ingredient Quant' id='ingredient1Quant' required><br>
+                    <input type='text' placeholder='Ingredient Unit' id='ingredient1Unit' required><br><br>
+                </div>
+            </div>
+            <input type='button' value='Add Ingredient' onclick='addIngredientField()'><br>
+
+            <input type='text' placeholder='img url' id='imgUrl' required><br>
+
+            <input type='button' value='Save' onclick='sendData()'><br><br>
+			<input type='button' value='Logout' onclick='logOut()'>
+        </div>
+    </div>
+
+    <div id="rightPane">
+        <h2>JSON Output</h2>
+		<input type='text' placeholder='Recipe Name' id='title'>
+		<input type='text' placeholder='Share To' id='share'><br>
+		<input type='button' value='Pull Recipe' onclick='pullRecipe()'>
+		<input type='button' value='Share Recipe' onclick='share()'>
+		
+        <div id="jsonOutput"></div>
+    </div>
+											<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.scrollex.min.js"></script>
+			<script src="assets/js/jquery.scrolly.min.js"></script>
+			<script src="assets/js/browser.min.js"></script>
+			<script src="assets/js/breakpoints.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+
+	</body>
+</html>

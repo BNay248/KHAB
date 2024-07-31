@@ -1,0 +1,127 @@
+<!DOCTYPE HTML>
+<!--
+	Massively by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>Khab Search</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+	</head>
+	<body class="is-preload">
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Header -->
+					<header id="header">
+						<a href="elements.html" class="logo">Login</a>
+					</header>
+
+				<!-- Nav -->
+					<nav id="nav">
+						<ul class="links">
+							<li><a href="index.html">This is Massively</a></li>
+							<li class="active"><a href="generic.html">Generic Page</a></li>
+							<li><a href="elements.html">Elements Reference</a></li>
+						</ul>
+						<ul class="icons">
+							<li><a href="#" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li>
+							<li><a href="#" class="icon brands fa-facebook-f"><span class="label">Facebook</span></a></li>
+							<li><a href="#" class="icon brands fa-instagram"><span class="label">Instagram</span></a></li>
+							<li><a href="#" class="icon brands fa-github"><span class="label">GitHub</span></a></li>
+						</ul>
+					</nav>
+
+				<!-- Main -->
+					<div id="main">
+
+						<!-- Post -->
+							<section class="post">
+								<header class="major">
+									<span class="date">April 25, 2017</span>
+									  <h1>Search for new recipes here</h1>
+    <div class="formbold-main-wrapper">
+    </div>
+    <form id="searchForm">
+      <label for="search_food">Search meals by name:</label>
+      <input type="text" id="search_food" name="search_food" required>
+      <button type="submit">Search</button>
+    </form>
+
+    <div id="searchResults"></div>
+    <div id="recipe_details"></div>
+
+    <script>
+      document.getElementById('searchForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        var searchFood = document.getElementById('search_food').value;
+        fetch('search.php', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: 'search_food=' + encodeURIComponent(searchFood)
+        })
+        .then(response => response.json())
+        .then(data => {
+          var searchResults = document.getElementById('searchResults');
+          searchResults.innerHTML = '';
+          if (data.meals && data.meals.length > 0) {
+            searchResults.innerHTML = '<h3>Search results for \'' + searchFood + '\':</h3><ul>';
+            data.meals.forEach(meal => {
+              searchResults.innerHTML += '<li>' + meal.strMeal + ' <button onclick="loadRecipe(\'' + meal.idMeal + '\')">Load Recipe</button></li>';
+            });
+            searchResults.innerHTML += '</ul>';
+          } else {
+            searchResults.innerHTML = '<p>No meals found for \'' + searchFood + '\'</p>';
+          }
+        })
+        .catch(error => {
+          console.error('Error fetching search results:', error);
+          alert('Error fetching search results. Please try again later.');
+        });
+      });
+
+      function loadRecipe(mealId) {
+        var apiUrl = 'https://www.themealdb.com/api/json/v1/1/lookup.php?i=' + mealId;
+        fetch(apiUrl)
+          .then(response => response.json())
+          .then(data => {
+            if (data.meals && data.meals.length > 0) {
+              var meal = data.meals[0];
+              var recipeDetails = document.getElementById('recipe_details');
+              recipeDetails.innerHTML = '<h3>Recipe for ' + meal.strMeal + ':</h3>' +
+                '<p>' + meal.strInstructions + '</p>' +
+                '<p><strong>Category:</strong> ' + meal.strCategory + '</p>' +
+                '<p><strong>Area:</strong> ' + meal.strArea + '</p>' +
+                '<img src="' + meal.strMealThumb + '" alt="' + meal.strMeal + '" style="max-width: 300px;">';
+            } else {
+              alert('Recipe not found.');
+            }
+          })
+          .catch(error => {
+            console.error('Error fetching recipe:', error);
+            alert('Error fetching recipe. Please try again later.');
+          });
+      }
+    </script>
+								
+					</div>
+
+				<!-- Footer -->
+						<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.scrollex.min.js"></script>
+			<script src="assets/js/jquery.scrolly.min.js"></script>
+			<script src="assets/js/browser.min.js"></script>
+			<script src="assets/js/breakpoints.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+
+	</body>
+</html>
